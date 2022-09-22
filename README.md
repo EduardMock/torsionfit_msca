@@ -1,2 +1,4 @@
 # torsionfit_msca
-Module to parametrize Torsion under simulated annealing
+Module to parametrize dihedrals under simulated annealing
+
+
