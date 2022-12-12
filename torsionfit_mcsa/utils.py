@@ -1,11 +1,13 @@
 from copy import deepcopy
 import numpy as np
-import logging
-import sys
-
-
-import math
+import ipywidgets 
+from ipywidgets import Layout, ButtonStyle,Output
+from IPython.display import clear_output
+import os 
 from geometric.molecule import Molecule
+import nglview
+from geometric.molecule import Molecule
+
 
 def read_scan_xyz(filename):
     """
@@ -38,9 +40,6 @@ def read_scan_xyz(filename):
 
 
 
-
-import nglview
-from geometric.molecule import Molecule
 
 
 class MyStructureTrajectory(nglview.Structure, nglview.Trajectory):
@@ -86,11 +85,6 @@ class MyStructureTrajectory(nglview.Structure, nglview.Trajectory):
         # return total frames
         return len(self.mol)
     
-
-import ipywidgets 
-from ipywidgets import Layout, ButtonStyle,Output
-from IPython.display import clear_output
-import os 
 
 
 
@@ -254,12 +248,6 @@ except psi4.ConvergenceError:
     r.close()
     
 """,file=psi4qm)
-
-
-
-
-
-
 
 
     return ipy_widg

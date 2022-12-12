@@ -17,7 +17,7 @@ import mdtraj as md
 from parmed.charmm import CharmmPsfFile, CharmmParameterSet
 import parmed
 # from torsionfit.database import DataBase
-from .database_mc_gro import DataBase
+from .database import DataBase
 
 from copy import deepcopy
 from fnmatch import fnmatch
