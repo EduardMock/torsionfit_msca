@@ -1,3 +1,7 @@
+__author__ = 'Chaya D. Stern'
+
+from email.mime import base
+from turtle import position
 import pandas as pd
 import numpy as np
 
@@ -13,7 +17,7 @@ import mdtraj as md
 from parmed.charmm import CharmmPsfFile, CharmmParameterSet
 import parmed
 # from torsionfit.database import DataBase
-from .database_mc import DataBase
+from .database import DataBase
 
 from copy import deepcopy
 from fnmatch import fnmatch
@@ -1051,3 +1055,144 @@ class QMDataBase(DataBase):
         return newtraj       
 
 
+
+
+# ---------------------------------------------------------------------------------------
+
+
+
+
+# def plot_torsions(torsion_psi4,xyz,structure,di_name,di_num,increment, shift_first=False, set_oo=True):
+    
+#     molecule= Molecule(xyz)
+    
+#     if structure.endswith('psf'):
+#         topology = md.load_psf(structure)
+#         structure=parmed.load_file(structure)
+#         # structure = CharmmPsfFile(structure)
+        
+#     else:
+#         topology = md.load(structure).topology
+#         structure = parmed.load_file(structure)
+    
+    
+    
+#     grid = GridspecLayout(1, 2)   
+#     m_all, goAtoms = molecule.rotate_bond(0,*di_num[1:3],increment=increment)
+#     m_rot=m_all[::]
+#     m_d=m_rot.Data['xyzs']
+#     rot_by=m_rot.measure_dihedrals(*di_num)
+
+#     m=0
+#     E_mp2_con=[]  #kcal/mol
+#     Di_con=[]
+#     for i in range(len(m_rot[:])):
+#         # print(i)
+#         try:
+#             rot_int= int(np.round(rot_by[i],1))  #+ increment*i    #
+#             result="%s/%s/opt_tmp/gid_%i/result.dat"%(torsion_psi4,di_name,rot_int)
+#             geoms="%s/%s/opt_tmp/gid_%i/geoms.xyz"%(torsion_psi4,di_name,rot_int)
+#             geom_all=Molecule(geoms)
+#             # print(m_rot[i].Data['xyzs'] )
+#             # print( geom_all[-1].Data['xyzs'] )
+#             m_rot.Data['xyzs'][i] = geom_all.Data['xyzs'][-1]
+
+#             E_mp2= np.loadtxt(result, usecols=1, dtype=str)
+#             Di_con.append(rot_int)
+#             E_mp2_con.append(float(E_mp2))
+            
+#             #print(rot_int, E_mp2)
+#             m+=1
+#         except:
+#             print()
+
+
+    
+    
+#     if shift_first:
+#         Di_con[0]=-int(np.round(rot_by[0],1))
+#         Di_con.append(180) #np.insert(Di_con,-1,np.round(rot_by[0],1))
+#         E_mp2_con=np.insert(E_mp2_con,0,E_mp2_con[-1])
+#         #E_mp2_con=np.delete(E_mp2_con, -1)
+        
+#     if set_oo:
+#         index= Di_con.index(min(Di_con))
+#         print(index)
+#         tmp1= Di_con[index:]
+#         #print(tmp1)
+#         tmp2=Di_con[:index]
+#         #print(tmp2)
+#         Di_con=tmp1+tmp2
+#     # print(Di_con,E_mp2_con)
+
+#     angles = np.asarray(Di_con)
+#     torsions= di_num
+#     qm_energies = Quantity(value=np.asarray(E_mp2_con), unit=kilojoules_per_mole)
+#     positions = np.asarray(m_rot.Data['xyzs'] )*0.1  # in nanometers  
+    
+    
+    
+#     # self.n_frames = len(self.positions)
+    
+    
+#     E_mp2_con_rel=E_mp2_con-np.min(E_mp2_con)  
+
+    
+#     out = Output()
+#     fig, ax = plt.subplots(constrained_layout=True ) 
+#     ax.set_xlabel('$ \psi $ / °') # X axis data label 
+#     ax.set_ylabel(r'$E_{pot}$ /kcal$\cdot$mol$^{-1}$ ')
+    
+    
+#     with out:
+#         fig.canvas.toolbar_position = 'bottom'
+#         ax.plot(Di_con,E_mp2_con_rel, marker="h",c='teal', label='qm energies' )
+#         line1, = ax.plot(Di_con[0],E_mp2_con_rel[0], marker="h",c='orange' )
+#         plt.show()
+
+#     def on_value_change(b):
+#         with out:
+#             try:
+#                 frm=b['new']
+#                 ax.plot(Di_con,E_mp2_con_rel, marker="h",c='teal')
+#                 ax.plot(Di_con[frm],E_mp2_con_rel[frm], marker="h",c='orange')
+
+#             except:
+#                 print()
+    
+#     def extract(b):
+#         with out:
+#             frm=molview.frame
+#             f=open("%s/new_coord.xyz"%(un_opt), "w")
+#             print(MyStructureTrajectory(m_rot).get_structure_string_xyz(frm), file=f)
+#             f.close()
+#             print("file written")
+    
+    
+#     Button = ipywidgets.Button(description= "Extract Frame as .xyz",
+#                 layout=Layout(width='800px', grid_area='header'),
+#                 style=ButtonStyle(button_color='lightblue',font_size="35",font_weight='bold'))
+    
+#     text = ipywidgets.Button(description= "%s"%di_name,
+#                     layout=Layout(width='800px', grid_area='header'),
+#                     style=ButtonStyle(button_color='lightblue',font_size="35",font_weight='bold'))
+
+#     molview = nglview.NGLWidget(MyStructureTrajectory(m_rot)) #._set_size(200,200)   
+#     molview._set_size('800px', '500px')
+    
+#     grid[0,0]= ipywidgets.VBox([text,molview])
+#     grid[0,1]= ipywidgets.VBox([Button,out])
+    
+#     molview.observe(on_value_change, ['frame'])
+#     Button.on_click(extract)
+#     # molview.observe(on_click, ['frame'])
+
+#     return    QMDataBase(molecule=molecule, positions=positions, topology=topology, structure=structure, torsions=torsions,  qm_energies=qm_energies, angles=angles
+#                       ,extracted_torsions=torsion_angles)
+    
+#            #display.display(grid)
+
+
+
+
+# ---------------------------------------------------------------------------------------

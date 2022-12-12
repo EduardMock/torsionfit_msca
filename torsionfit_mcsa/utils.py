@@ -1,13 +1,13 @@
-__author__ = 'Chaya D. Stern'
-
 from copy import deepcopy
 import numpy as np
-import logging
-import sys
-
-
-import math
+import ipywidgets 
+from ipywidgets import Layout, ButtonStyle,Output
+from IPython.display import clear_output
+import os 
 from geometric.molecule import Molecule
+import nglview
+from geometric.molecule import Molecule
+
 
 def read_scan_xyz(filename):
     """
@@ -40,9 +40,6 @@ def read_scan_xyz(filename):
 
 
 
-
-import nglview
-from geometric.molecule import Molecule
 
 
 class MyStructureTrajectory(nglview.Structure, nglview.Trajectory):
@@ -88,11 +85,6 @@ class MyStructureTrajectory(nglview.Structure, nglview.Trajectory):
         # return total frames
         return len(self.mol)
     
-
-import ipywidgets 
-from ipywidgets import Layout, ButtonStyle,Output
-from IPython.display import clear_output
-import os 
 
 
 
@@ -258,12 +250,6 @@ except psi4.ConvergenceError:
 """,file=psi4qm)
 
 
-
-
-
-
-
-
     return ipy_widg
 
 
@@ -286,31 +272,3 @@ def RMSE(scanSet, db):
         errors[i] = rmse
     return errors
 
-
-def logger(name='torsionFit', pattern='%(asctime)s %(levelname)s %(name)s: %(message)s',
-           date_format='%H:%M:%S', handler=logging.StreamHandler(sys.stdout)):
-    """
-    Retrieves the logger instance associated to the given name
-    :param name: The name of the logger instance
-    :param pattern: The associated pattern
-    :param date_format: The date format to be used in the pattern
-    :param handler: The logging handler
-    :return: The logger
-    """
-    _logger = logging.getLogger(name)
-    _logger.setLevel(log_level(verbose))
-
-    if not _logger.handlers:
-        formatter = logging.Formatter(pattern, date_format)
-        handler.setFormatter(formatter)
-        handler.setLevel(log_level(verbose))
-        _logger.addHandler(handler)
-        _logger.propagate = False
-    return _logger
-
-
-def log_level(verbose=verbose):
-    if verbose:
-        return logging.DEBUG
-    else:
-        return logging.INFO
